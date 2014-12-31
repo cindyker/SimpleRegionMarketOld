@@ -1,6 +1,8 @@
 package me.ienze.SimpleRegionMarket;
 
-import com.sk89q.worldguard.protection.managers.storage.StorageException;
+//import com.sk89q.worldguard.protection.managers.storage.StorageException;
+import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
+import com.sk89q.worldguard.protection.managers.FlatRegionManager;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import java.io.File;
 import java.io.IOException;
@@ -147,7 +149,7 @@ public class SimpleRegionMarket extends JavaPlugin {
 
                         try {
                             mgr.save();
-                        } catch (final StorageException e) {
+                        } catch (final ProtectionDatabaseException e) {
                             LangHandler.directOut(Level.SEVERE, "WorldGuard >> Failed to write regionsfile: " + e.getMessage());
                         }
                     }
@@ -156,7 +158,7 @@ public class SimpleRegionMarket extends JavaPlugin {
                     final RegionManager mgr = wgManager.getWorldGuard().getRegionManager(Bukkit.getWorld(onlyWorld));
                     try {
                         mgr.save();
-                    } catch (final StorageException e) {
+                    } catch (final ProtectionDatabaseException e) {
                         LangHandler.directOut(Level.SEVERE, "WorldGuard >> Failed to write regionsfile: " + e.getMessage());
                     }
                 }

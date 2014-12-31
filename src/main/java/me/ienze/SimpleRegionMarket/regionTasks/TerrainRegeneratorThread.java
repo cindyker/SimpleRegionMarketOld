@@ -5,12 +5,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Random;
-import net.minecraft.server.v1_7_R4.BiomeBase;
-import net.minecraft.server.v1_7_R4.Block;
-import net.minecraft.server.v1_7_R4.ChunkProviderGenerate;
-import net.minecraft.server.v1_7_R4.WorldType;
+import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.ChunkGenerator.BiomeGrid;
 
@@ -52,7 +49,7 @@ public class TerrainRegeneratorThread extends Thread {
                     chunks.put(x + "," + z, chunk);
                 } else {
                     //default generator
-                    net.minecraft.server.v1_7_R4.World mcworld = ((CraftWorld) world).getHandle();
+                    net.minecraft.server.v1_8_R1.World mcworld = ((CraftWorld) world).getHandle();
 
                     byte[] bytes = new byte[65536];
                     Block[] ablock = new Block[1];
@@ -61,8 +58,10 @@ public class TerrainRegeneratorThread extends Thread {
                         biomes[i] = BiomeBase.PLAINS;
                     }
 
-                    if (mcworld.worldProvider.type == WorldType.NORMAL) {
-                        new ChunkProviderGenerate(mcworld, mcworld.getSeed(), true).a(x, z, ablock, bytes, biomes);
+                    if (mcworld.worldProvider instanceof WorldProviderNormal) {
+                        ChunkSnapshot chunksnapshot = new ChunkSnapshot();
+                        //This is almost certainly wrong.
+                        new ChunkProviderGenerate(mcworld, mcworld.getSeed(), true,"new").a(x, z, chunksnapshot, biomes);
                     }
 
                     byte[][] sections = new byte[world.getMaxHeight() / 16][4096];
