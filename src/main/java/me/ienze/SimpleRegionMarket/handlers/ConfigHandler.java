@@ -39,21 +39,15 @@ public class ConfigHandler {
 
         //if not exist copy
         if (!new File(SimpleRegionMarket.getPluginDir() + "config.yml").exists()) {
+            plugin.getLogger().info("Writing New Config!");
             plugin.saveResource("config.yml", false);
         } else {
 
             Boolean changed = false;
             Boolean rewrite = false;
 
-            //remove unnecessary lines
-            FileConfiguration resourcesConfig = new YamlConfiguration();
-            try {
-                resourcesConfig.load(plugin.getResource("config.yml"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InvalidConfigurationException e) {
-                e.printStackTrace();
-            }
+
+            FileConfiguration resourcesConfig = plugin.getConfig();
 
             Set<String> rk = resourcesConfig.getKeys(false);
 
@@ -74,16 +68,22 @@ public class ConfigHandler {
             for (String rkey : rk) {
                 if (!ckey.contains(rkey)) {
                     rewrite = true;
+
                 }
+
+
+            }
+            if (rewrite) {
+                plugin.getLogger().info("WARNING - OUT DATED CONFIG... ");
+                //plugin.saveResource("config.yml", true);
             }
 
-            if (rewrite) {
-                plugin.saveResource("config.yml", true);
-            }
+
             
             //Convert Files ot UUID format
-            if (config.getString("version").equals("3.3.5")){
-                
+            if ( (!config.contains("version")) || config.getString("version").equals("3.3.5")){
+
+                plugin.getLogger().info("Starting Conversion of old Configs.");
                 //Convert Statistics
                 
                 if (new File(SimpleRegionMarket.getPluginDir() + "statistics.yml").exists()) {
@@ -247,6 +247,8 @@ public class ConfigHandler {
                 } catch (IOException ex) {
                     Logger.getLogger(ConfigHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
+
             }
         }
     }
