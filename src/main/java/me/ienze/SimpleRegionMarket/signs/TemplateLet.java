@@ -1,11 +1,14 @@
 package me.ienze.SimpleRegionMarket.signs;
 
+import com.avaje.ebean.LogLevel;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+
 import me.ienze.SimpleRegionMarket.SimpleRegionMarket;
 import me.ienze.SimpleRegionMarket.TokenManager;
 import me.ienze.SimpleRegionMarket.Utils;
@@ -13,6 +16,7 @@ import me.ienze.SimpleRegionMarket.handlers.LangHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.craftbukkit.libs.jline.internal.Log;
 import org.bukkit.entity.Player;
 
 /**
@@ -211,8 +215,9 @@ public class TemplateLet extends TemplateMain {
         if (Utils.getEntryBoolean(this, world, region, "taken")) {
             if (Utils.getEntryLong(this, world, region, "expiredate") < System.currentTimeMillis()) {
                 if (Utils.getEntry(this, world, region, "owner") != null) {
-                    final Player owner = Bukkit.getPlayer(UUID.fromString(Utils.getEntryString(this, world, region, "owner")));
+                    final OfflinePlayer owner = Bukkit.getOfflinePlayer(Utils.getEntryString(this, world, region, "owner"));
                     final OfflinePlayer account = Bukkit.getOfflinePlayer(UUID.fromString(Utils.getEntryString(this, world, region, "account")));
+                    if(owner == null) { LangHandler.directOut(Level.INFO,"No Upkeep for " + Utils.getEntryString(this, world, region, "owner") + " Owner is null ");}
                     final Double price = Utils.getEntryDouble(this, world, region, "price");
                     if (SimpleRegionMarket.econManager.econHasEnough(owner, price)) {
                         if (SimpleRegionMarket.econManager.moneyTransaction(owner, account, price)) {
@@ -222,7 +227,8 @@ public class TemplateLet extends TemplateMain {
                                 if (SimpleRegionMarket.configurationHandler.getConfig().getBoolean("Show_Auto_Expand_Message", true)) {
                                     final ArrayList<String> list = new ArrayList<String>();
                                     list.add(region);
-                                    LangHandler.NormalOut(owner, "PLAYER.REGION.AUTO_EXPANDED", list);
+                                    if(Bukkit.getPlayer(owner.getName())!=null)
+                                       LangHandler.NormalOut(Bukkit.getPlayer(owner.getName()), "PLAYER.REGION.AUTO_EXPANDED", list);
                                 }
                                 SimpleRegionMarket.statisticManager.onMoneysUse(this.id, world, price, account, owner);
                             }
@@ -232,7 +238,8 @@ public class TemplateLet extends TemplateMain {
                     if (owner != null) {
                         final ArrayList<String> list = new ArrayList<String>();
                         list.add(region);
-                        LangHandler.NormalOut(owner, "PLAYER.REGION.EXPIRED", list);
+                        if(Bukkit.getPlayer(owner.getName())!=null)
+                            LangHandler.NormalOut(Bukkit.getPlayer(owner.getName()), "PLAYER.REGION.EXPIRED", list);
                     }
                 }
                 untakeRegion(world, region);

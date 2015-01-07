@@ -2,13 +2,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.ienze.SimpleRegionMarket</groupId>
     <artifactId>SimpleRegionMarket</artifactId>
-    <version>3.6.3</version>
+    <version>3.6.5</version>
     <name>SimpleRegionMarket</name>
     <description>WorldGuard Region Market Plugin</description>
     <url>http://dev.bukkit.org/server-mods/simple-region-market</url>
     <properties>
         <state>release</state>
-        <majorversion>3.6.4</majorversion>
+        <majorversion>3.6.5</majorversion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <minecraft.version>1.8</minecraft.version>
         <minecraft_version>1_6_R3</minecraft_version>
@@ -28,7 +28,7 @@
         </repository>
         <repository>
             <id>md_5-snapshots</id>
-            <url>http://repo.md-5.net/content/repositories/releases/</url>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
     </repositories>
     <build>
